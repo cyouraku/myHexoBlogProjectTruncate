@@ -1,0 +1,8 @@
+#select * from t_user where user_id = 100000163;
+#SELECT * FROM channel_base_info WHERE channel_id  =  100042;
+#SELECT * FROM channel_targeting WHERE channel_id  =  100042;
+update user_profile set user_id = 100000164 , update_user = 'user_100000164',regist_user = 'user_100000164' where user_id = 100000163;
+commit;
+select * from user_profile where user_id = 100000164;
+
+SELECT * FROM public.t_user_attribute where user_id = 100000163;

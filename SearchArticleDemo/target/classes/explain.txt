@@ -1,0 +1,85 @@
+#キーワードあり最新版記事数＝63292 (検証環境)
+select count(ai.article_id) from article_info ai 
+inner join (select av.article_id, av.article_title, max(av.article_version) as latest_version, av.keyword from article_version av group by av.article_id, av.article_title, av.keyword) 
+as maxver on ai.article_id=maxver.article_id where ai.delete_flag='0' and maxver.keyword is not null
+
+#キーワードあり、タイトルあり、サマリあり、本文あり最新版記事数＝63587 (検証環境)
+select count(ai.article_id),count(maxver.keyword),count(maxver.article_title),count(maxver.article_body_summary),count(maxver.article_body_plain) from article_info ai 
+inner join (select av.article_id, av.article_title, max(av.article_version) as latest_version, av.keyword, av.article_body_summary, av.article_body_plain from article_version av group by av.article_id, av.article_title, av.keyword, av.article_body_summary, av.article_body_plain) 
+as maxver on ai.article_id=maxver.article_id where ai.delete_flag='0' 
+and maxver.keyword is not null
+and maxver.article_title is not null
+and maxver.article_body_summary is not null
+and maxver.article_body_plain is not null
+
+#ある記事IDにてメニューIDを取得する
+select mcl.menu_id from menu_channel_link mcl
+inner join system_channel_article sca
+on mcl.channel_id = sca.channel_id where sca.delete_flag='0' and sca.article_id=376750;
+
+#PostgreSQL command line query:
+psql -d d2pdb -U d2pdbusr -c "select article_id,channel_id from system_channel_article where article_id=376750"
+psql -d d2pdb -U d2pdbusr -c "select mcl.menu_id from menu_channel_link mcl inner join system_channel_article sca on mcl.channel_id = sca.channel_id where sca.delete_flag='0' and sca.article_id=376750"
+
+#最新記事版の「記事ID」、「記事版」と記事キーワードを取得する
+Explain SELECT av.article_id, av.article_version, av.keyword FROM public.article_version av where av.keyword!='' and av.article_version=(select max(av1.article_version) from public.article_version av1 where av1.article_id=av.article_id) order by av.article_id asc limit 10
+
+#最新コメント版の「コメントID」、「コメント版」と「コメント内容」を取得する
+SELECT cv.comment_id, cv.comment_version, cv.comment_text from comment_version cv where cv.comment_version=(select max(cv1.comment_version) from comment_version cv1 where cv.comment_id=cv1.comment_id) order by cv.comment_id asc limit 10
+
+#記事ID数集計と最新記事版情報を取得する（1 row）
+select count(article_id) as total_id, max(article_version) as max_version from public.article_version
+
+##記事ID集合で最新記事版情報を取得する(53999 rows）
+select article_id, max(article_version) as max_version from public.article_version group by article_id
+
+#記事IDと記事タイトル集合で記事ID,最新記事版,記事タイトル情報を取得する。（54458 rows）
+select article_id, max(article_version) as latest_version, article_title from article_version group by article_id, article_title
+
+#inner join:54457 (ローカルDB)
+#inner join:220735 (検証環境)
+select count(ai.article_id) from article_info ai inner join (select av.article_id, av.article_title, max(av.article_version) as latest_version from article_version av group by av.article_id, av.article_title) as maxver on ai.article_id=maxver.article_id where ai.delete_flag='0'
+
+#left join:54481(ローカルDB)
+select count(ai.article_id) from article_info ai left join ( select article_id, max(article_version) as latest_version, article_title from article_version group by article_id, article_title ) as maxver on ai.article_id = maxver.article_id
+
+#right join:54457(ローカルDB)
+select count(ai.article_id) from article_info ai right join ( select article_id, max(article_version) as latest_version, article_title from article_version group by article_id, article_title ) as maxver on ai.article_id = maxver.article_id
+
+#チャンネル紐付情報からチャンネルID（channel_id）、条件種別（element_type）、条件値（element_value）を取得する
+#JOIN条件：チャンネル基本情報から「channel_type」がユーザ作成チャンネル、且つ「fixed_flag」が固定チャンネルであるチャンネルID（channel_id）
+SELECT ce.channel_id, ce.element_type, ce.element_value FROM public.channel_element ce 
+ RIGHT JOIN (SELECT cbi.channel_id FROM public.channel_base_info cbi where cbi.channel_type = '2' and cbi.fixed_flag = '1') as cbi_result on ce.channel_id = cbi_result.channel_id;
+
+#2018/08/01
+#システムチャンネル記事情報(system_channel_article)からチャンネルID、記事IDを取得する
+#条件1：select menu_channel_link.channel_id where メニュー情報（menu_info）から取得したメニューID（menu_id）= メニューチャンネル（menu_channel_link）から取得したメニューID（menu_id）
+#条件2：system_channel_article.channel_id = menu_channel_link.channel_id
+select sca.channel_id sca.article_id from system_channel_article sca 
+RIGHT JOIN (
+(select mi.menu_id, mcl_result.channel_id from menu_info mi 
+RIGHT JOIN (select mcl.channel_id, mcl.menu_id from menu_channel_link mcl group by mcl.channel_id,  mcl.menu_id) as mcl_result on mi.menu_id = mcl_result.menu_id) as result
+on sca.channel_id = result.channel_id;
+
+
+#サイト情報を取得
+SELECT DISTINCT(channel_id), element_value FROM public.channel_element where element_type = '2';
+
+#keyword情報を取得
+SELECT DISTINCT(channel_id), element_value FROM public.channel_element where element_type = '1';
+
+#keyword in kamelio
+SELECT genre_name, keywords from genre_master where delete_flag='0';
+
+#
+SELECT DISTINCT keyword from article_version where keyword <> 'null' limit 100;
+
+#article_infoからローカル記事を取得
+select article_id, site_id, cms_content_id from article_info where cms_content_id !='';
+
+#article_versionからローカル記事を取得
+select article_id, max(article_version) as max_version, article_title, cms_content_name, article_body_plain from article_version where cms_content_name != '' group by article_id, article_title, cms_content_name, article_body_plain;
+
+#「Right join」にてローカル記事を取得
+select DISTINCT ai.article_id, ai.site_id, ai.cms_content_id, av_result.max_version, av_result.article_title, av_result.article_body_plain from article_info ai
+RIGHT JOIN (select av.article_id, max(av.article_version) as max_version, av.article_title, av.cms_content_name, av.article_body_plain from article_version av where av.cms_content_name != '' group by av.article_id, av.article_title, av.cms_content_name, av.article_body_plain) as av_result on ai.article_id=av_result.article_id;

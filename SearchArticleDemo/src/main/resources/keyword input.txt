@@ -1,0 +1,24 @@
+#キーワードあり、タイトルあり、サマリあり、本文あり最新版記事数＝63587 (検証環境)
+select ai.article_id,maxver.keyword,maxver.article_title,maxver.article_body_summary,maxver.article_body_plain,ai.article_url from article_info ai 
+inner join (select av.article_id, av.article_title, max(av.article_version) as latest_version, av.keyword, av.article_body_summary, av.article_body_plain from article_version av group by av.article_id, av.article_title, av.keyword, av.article_body_summary, av.article_body_plain) 
+as maxver on ai.article_id=maxver.article_id where ai.delete_flag='0' 
+and maxver.keyword is not null
+and maxver.article_title is not null
+and maxver.article_body_summary is not null
+and maxver.article_body_plain is not null
+
+start:1 row:63587
+
+
+select article_id, max(article_version) from article_version where keyword is not null and delete_flag='0'
+
+#Solr検索urlの例1：
+/select?fl=articleId&q=title:医療 && summary:日本&& plain:喫煙&& keyword:高齢者
+#Solr検索urlの例2：
+/select?df=keyword&fl=articleId,title&fq=title:喫煙~0.8&q=高齢者
+#Solr検索urlの例3：
+http://localhost:8983/solr/sample_core_001/select?df=keyword&fl=articleId,title,summary,keyword,url&fq=title:喫煙~0.8&q=喫煙,高齢者
+
+#ローカルDB(192.168.56.101)にてURLが古いため、通信エラーが発生した記事ID
+select article_id,article_title,article_body_summary,article_body_plain from article_version where article_id=365623
+
