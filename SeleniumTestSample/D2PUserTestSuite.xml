@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<!-- <suite thread-count="2" name="Suite" parallel="classes"> -->
+<suite name="D2PUserTestSuite">
+  <test thread-count="2" name="D2PUserTestSuit" parallel="classes">
+    <classes>
+      <class name="seleniumTest.sample.D2PUserGlobalMenuTest"/>
+      <class name="seleniumTest.sample.D2PUserSettingMenuTest"/>
+    </classes>
+  </test> <!-- D2PUserTestSuit -->
+</suite> <!-- Suite -->

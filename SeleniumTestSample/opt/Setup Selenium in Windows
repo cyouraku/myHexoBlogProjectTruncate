@@ -1,0 +1,15 @@
+0.Details URL
+https://qiita.com/emurin/items/f9c2ebd773a9d5b18308
+
+1.Download jar files
+Selenium Standalone Server:3.14.0
+Google Chrome Driver:2.41
+
+2.Setup chrome browser IDE
+https://chrome.google.com/webstore/detail/selenium-ide/mooikfkahbdckldjjndioackbalphokd
+
+3.Start up Selenium remote hub and node
+#Start hub
+java -Dwebdriver.chrome.driver=chromedriver.exe -jar selenium-server-standalone-3.14.0.jar -role hub
+#Start node
+java -Dwebdriver.chrome.driver=chromedriver.exe -jar selenium-server-standalone-3.14.0.jar -role node
