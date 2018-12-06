@@ -30,10 +30,26 @@ public class AnsjSegUtil {
 
 	private static String testStr = "欢迎使用ansj_seg,(ansj中文分词)在这里如果你遇到什么问题都可以联系我.我一定尽我所能.帮助大家.ansj_seg更快,更准,更自由!";
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException {
 
 		testFindKeyword();
+	}
 
+	private static void dispEquals(){
+		logger.info("round 1");
+		testEquals("","");
+		logger.info("round 2");
+		testEquals(null,"");
+		logger.info("round 3");
+		testEquals("",null);
+	}
+
+	private static void testEquals(String input, String cons){
+		if(input.equals(cons)){
+			System.out.println("OK");
+		}else{
+			System.out.println("NG");
+		}
 	}
 
 	private static void testTreeSplitDemo() throws Exception{
@@ -220,6 +236,7 @@ public class AnsjSegUtil {
 		Model model = CRFModel.load("D:/tmp/sn/model.txt");
 		model.writeModel("D:/tmp/sn/crf.model");
 	}
+
 
 
 }
