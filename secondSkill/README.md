@@ -13,16 +13,16 @@
 
 ## 视屏截图
 ### 1、主流程
-![imag](https://github.com/caidao/secondSkill/blob/master/doc/%E4%B8%BB%E6%B5%81%E7%A8%8B.png)
+![imag](https://github.com/cyouraku/myTrunk/tree/master/secondSkill/doc/main_process.png)
 
 ### 2、瓶颈分析
-![imag](https://github.com/caidao/secondSkill/blob/master/doc/瓶颈分析.png)
+![imag](https://github.com/cyouraku/myTrunk/tree/master/secondSkill/doc/bottle_necks.png)
 
 ### 3、优化总结
-![imag](https://github.com/caidao/secondSkill/blob/master/doc/优化总结.png)
+![imag](https://github.com/cyouraku/myTrunk/tree/master/secondSkill/doc/youhuazongjie.png)
 
 ### 4、实际应用方案
-![imag](https://github.com/caidao/secondSkill/blob/master/doc/实际应用方案.png)
+![imag](https://github.com/cyouraku/myTrunk/tree/master/secondSkill/doc/plan.png)
 
 ### 5、成本分析
-![imag](https://github.com/caidao/secondSkill/blob/master/doc/成本分析.png)
+![imag](https://github.com/cyouraku/myTrunk/tree/master/secondSkill/doc/cost_analyze.png)
