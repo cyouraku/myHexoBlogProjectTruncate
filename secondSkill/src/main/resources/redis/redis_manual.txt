@@ -1,0 +1,22 @@
+#Install redis release_5.0.3
+#Download
+wget  http://download.redis.io/releases/redis-5.0.3.tar.gz
+#Unzip
+tar zxvf redis-5.0.3.tar.gz
+#Build
+make PREFIX=/usr/local/redis-5.0.3 install
+#Create link
+ln -s /usr/local/redis-5.0.3 /usr/local/redis
+
+
+#Copy redis.conf file
+cp ${basedir}/resources/redis/redis.conf /etc/redis.conf
+
+#Redis home
+/usr/local/redis/bin
+
+#Start redis
+./redis-server /etc/redis.conf
+
+#Shutdown redis
+./redis-cli shutdown
