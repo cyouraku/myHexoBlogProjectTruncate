@@ -1,5 +1,6 @@
 package org.seckill.service.impl;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -71,20 +72,17 @@ public class SeckillServiceImpl implements SeckillService {
                 redisDao.putSeckill(seckill);
             }
         }
-
-        Date startTime = seckill.getStartTime();
-        Date endTime =seckill.getEndTime();
-        Date nowTime = new Date();
-
-        if (nowTime.getTime()<startTime.getTime()||
-                nowTime.getTime()>endTime.getTime()){
-            return new Exposer(seckillId,false,nowTime.getTime(),
-                    startTime.getTime(),endTime.getTime());
-        }
-
-        //转化特定字符串的过程
-        String md5 = getMd5(seckillId);
-        return new Exposer(true,md5,seckillId);
+		Date startTime = seckill.getStartTime();
+		Date endTime = seckill.getEndTime();
+		Date nowTime = new Date();
+		if (nowTime.getTime() < startTime.getTime()
+				|| nowTime.getTime() > endTime.getTime()) {
+			return new Exposer(seckillId, false, nowTime.getTime(),
+					startTime.getTime(), endTime.getTime());
+		}
+		// 转化特定字符串的过程
+		String md5 = getMd5(seckillId);
+		return new Exposer(true, md5, seckillId);
     }
 
     @Transactional
@@ -94,25 +92,32 @@ public class SeckillServiceImpl implements SeckillService {
      * 2、保证事务方法的执行时间尽可能短，不要穿插其他网络操作，rpc/http请求或者剥离到事务方法外部
      * 3、不是所有方法都需要事务，
      */
-    public SeckillExecution excuteSeckill(long seckillId, long userPhone, String md5)
-            throws SeckillException,RepeatKillException, SeckillCloseException {
+    public SeckillExecution excuteSeckill(long seckillId, long userPhone, String md5) {
+
+    	int resultCode = 0;
 
         if (md5==null || !md5.equals(getMd5(seckillId))){
+        	resultCode = SeckillStatEnum.DATA_REWRITE.getState();
             throw new SeckillException("seckill data rewrite");
         }
         try {
+        	Timestamp killTime = new Timestamp(new Date().getTime());
             //记录购买行为
-            int insertCount = successKillMapper.insertSuccessKilled(seckillId, userPhone);
+            int insertCount = successKillMapper.insertSuccessKilled(seckillId, userPhone,killTime );
             //唯一
             if (insertCount <= 0) {
                 //重复秒杀
+            	resultCode = SeckillStatEnum.REPEAT_KILL.getState();
                 throw new RepeatKillException("seckill repeated");
             } else {
                 //执行秒杀逻辑：减库存+记录购买行为
 
                 //减库存，热点商品竞争
-                int updateCount = seckillMapper.reduceNumber(seckillId, new Date());
+                int updateCount = seckillMapper.reduceNumber(seckillId, killTime);
                 if (updateCount <= 0) {
+                	resultCode = SeckillStatEnum.END.getState();
+                	//update seckill_date = 0
+                	successKillMapper.updateSuccessKilled(seckillId, userPhone, resultCode);
                     //没有更新记录,秒杀结束
                     throw new SeckillCloseException("seckill is close");
                 } else {
@@ -121,13 +126,26 @@ public class SeckillServiceImpl implements SeckillService {
                     return new SeckillExecution(seckillId, SeckillStatEnum.SUCCESS, successKilled);
                 }
             }
+
         }catch (SeckillCloseException e1){
-            throw e1;
+//            throw e1;
+        	logger.error(e1.getMessage(),e1);
+            return new SeckillExecution(seckillId,SeckillStatEnum.END);
         }catch (RepeatKillException e2){
-            throw e2;
+//            throw e2;
+        	logger.error(e2.getMessage(),e2);
+            return new SeckillExecution(seckillId,SeckillStatEnum.REPEAT_KILL);
         } catch (Exception ex){
             logger.error(ex.getMessage(),ex);
-            throw new SeckillException("secjill inner error:"+ex.getMessage());
+//            throw new SeckillException("secjill inner error:"+ex.getMessage());
+            if(ex.getMessage().contains("重複キー") || ex.getMessage().contains("repeated")){
+            	resultCode = SeckillStatEnum.REPEAT_KILL.getState();
+            }else if( ex.getMessage().contains("rewrite")){
+            	resultCode = SeckillStatEnum.DATA_REWRITE.getState();
+            }else{
+            	resultCode = SeckillStatEnum.INNER_ERROR.getState();
+            }
+            return new SeckillExecution(seckillId,SeckillStatEnum.stateOf(resultCode));
         }
 
     }

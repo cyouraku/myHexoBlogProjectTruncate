@@ -1,6 +1,6 @@
 package org.seckill.dao;
 
-import java.util.Date;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 
@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.apache.ibatis.mapping.StatementType;
 import org.seckill.entity.Seckill;
 
@@ -23,7 +24,8 @@ public interface SeckillMapper {
      * @param killTime
      * @return
      */
-    int reduceNumber(@Param("seckillId") long seckillId, @Param("killTime") Date killTime);
+	@Update(value = { "update seckill set seckill_number = seckill_number -1 where seckill_id = ${seckillId} and end_time> '${killTime}' and start_time < '${killTime}' and seckill_number >0 "})
+    int reduceNumber(@Param("seckillId") long seckillId, @Param("killTime") Timestamp killTime);
 
     /**
      * 根据id查询秒杀对象

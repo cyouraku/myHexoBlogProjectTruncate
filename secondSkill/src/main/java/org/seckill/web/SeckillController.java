@@ -99,7 +99,10 @@ public class SeckillController {
        }
 
         try{
-            SeckillExecution execution = seckillService.excuteSeckillProducer(seckillId,phone,md5);
+        	//use PL/PostgreSql stored procedure:
+//            SeckillExecution execution = seckillService.excuteSeckillProducer(seckillId,phone,md5);
+            //user Transaction Annotation:
+            SeckillExecution execution = seckillService.excuteSeckill(seckillId,phone,md5);
             return new SeckillResult<SeckillExecution>(true,execution);
         }catch (SeckillCloseException e1){
             return new SeckillResult<SeckillExecution>(true,

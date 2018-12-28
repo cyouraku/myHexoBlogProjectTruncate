@@ -49,7 +49,7 @@ create or replace FUNCTION public.execute_seckill(in v_seckill_id bigint,
               RETURNING 1
       		)
       		SELECT count(*) FROM rows into update_count;
-        	IF (update_count=0) THEN
+        	IF (update_count<=0) THEN
         		/* update seckill_state as 0*/
         		update success_killed set seckill_sate = 0
         		where seckill_id = v_seckill_id
