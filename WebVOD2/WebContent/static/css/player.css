@@ -1,0 +1,6 @@
+/* post_list,post_list2,post_list3 area */
+
+#post_list,#post_list2,#post_list3{
+    display: flex;
+    justify-content: space-around;
+}
