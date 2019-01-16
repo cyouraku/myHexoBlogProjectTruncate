@@ -8,9 +8,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 @RequestMapping("/audio")
 public class AudioController {
+
     @RequestMapping(value = "/animal",method = RequestMethod.GET)
     public String getAnimal(){
         return "animal";
+    }
+
+    @RequestMapping(value = "/animal_card_ui",method = RequestMethod.GET)
+    public String getAnimalCardUI(){
+        return "animal_card_ui";
     }
 
 }

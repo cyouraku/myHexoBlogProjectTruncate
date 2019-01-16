@@ -83,7 +83,7 @@ session.setAttribute("videoPath", videoPath);
 	</div>
 </div>
 
-
+<script src="<%=basePath%>static/js/player_common.js" type="text/javascript"></script>
 <script src="<%=basePath%>static/js/player.js" type="text/javascript"></script>
 </body>
 </html>

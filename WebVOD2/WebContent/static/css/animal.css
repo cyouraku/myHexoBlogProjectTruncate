@@ -1,0 +1,10 @@
+/* animal_tb area */
+#animal_tb{
+	overflow-x :auto;
+	width:800px;
+	height:800px;
+	float:left;
+	margin:0 10px 0 10px;
+    display: flex;
+    justify-content: space-around;
+}

@@ -2,7 +2,7 @@
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
 String playerPath = basePath + "player";
-String audioPath  = basePath + "audio" + "/animal/" + "test.mp3";;
+String audioPath  = basePath + "audio";
 String imagePath = basePath + "images";
 session.setAttribute("basePath", basePath);
 session.setAttribute("playerPath", playerPath);
@@ -13,7 +13,6 @@ session.setAttribute("imagePath", imagePath);
 <html>
 <title>HLS Player</title>
 <head>
-	<link rel="stylesheet" href="${basePath}static/css/animal.css" />
     <link rel="stylesheet" href="${playerPath}/mediaelementplayer.css" />
     <link href="//cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.css" rel="stylesheet">
     <link href="//cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap-theme.css" rel="stylesheet">
@@ -35,36 +34,26 @@ session.setAttribute("imagePath", imagePath);
 	<!-- Default panel contents -->
 	<div class="panel panel-default">
 	    <div class="row">
-	    			<!-- 左側パネル:メディアリンク -->
-			<div class="col-sm-3" align="left" style="border: 0px;">
-			</div>
-
-			<!-- 中央パネル:メディアプレイヤー -->
-			<div class="col-sm-6" align="center" style="border: 0px;float">
-				<div class="row">
-					<div id="animal_tb">
-						<animal-post  v-for="animal in animalList" v-bind:key="animal.id" v-bind:animal="animal"></animal-post>
-					</div>
-	  			</div>
-	  			<!--${audioPath}-->
-	  			<div style="display:none">
-	  			<audio id="my-player" src="" type="audio/mp3" autostart="false2 loop="false" type="audio/mp3" controls preload hidden=true>
-	  			</audio>
-	  			</div>
-			</div>
-
-			<!-- 右側パネル:メディアリンク -->
-			<div class="col-sm-3" align="right" style="border: 0px;">
-			</div>
-
-        </div>
+        <div class="col-md-3">
+            <div class="panel-body" align="center">
+				<table id="animal_tb" style="margin-top: 2px;" >
+				<tbody>
+					<tr>
+						<td v-for="url in urlList"><input type="image" src="<%=imagePath%>/{{url.jpg}}" alt="{{url.name}}" v-on:click="play(url.link);" width="160" height="90" style="margin-left: 2px;"></td>
+					</tr>
+				</tbody>
+                </table>
+         	</div>
+         </div>
+         </div>
+<%--       <p><audio id="music" autoplay="false" loop="false"><source type="audio/mp3" src="<%=audioPath%>/{{currentAudio}}" hidden="true"></audio></p> --%>
+<%--       <p><embed id="music" src="<%=audioPath%>/{{currentAudio}}" autostart="false" loop="false" hidden="true"></embed></p> --%>
+      <p><video id="music" autoplay="false" loop="false"><source type="audio/mp3" src="<%=audioPath%>/{{currentAudio}}" hidden="true"></video></p>
 	</div>
-
 	<div class="panel panel-default" >
-		<div  class="panel-footer navbar-fixed-bottom" align="center" style="margin-bottom : 10px">HLS Server by Tim.Zhang@2018</div>
+		<div  class="panel-footer" align="center" >Designed by Tim.Zhang@2018</div>
 	</div>
 </div>
-<%-- <script src="<%=basePath%>static/js/common.js" type="text/javascript"></script> --%>
-<script src="<%=basePath%>/static/js/animal.js" type="text/javascript"></script>
+<script src="<%=basePath%>/static/js/audio.js" type="text/javascript"></script>
 </body>
 </html>
