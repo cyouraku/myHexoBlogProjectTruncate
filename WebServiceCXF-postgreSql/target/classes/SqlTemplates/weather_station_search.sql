@@ -1,0 +1,1 @@
+select code,name from weather_station where name="孝感";

@@ -1,0 +1,23 @@
+#2018/08/06 Batch Execution Result:
+#using:testGetMenuIdByArticleIdModified()
+2018-08-06 15:44:46.933  INFO 6076 --- [           main] c.l.s.tasklet.MyTaskletForRemoteSql      : Total channel id count = 1579506;
+2018-08-06 15:44:46.933  INFO 6076 --- [           main] c.l.s.tasklet.MyTaskletForRemoteSql      : System Menu ID count = 7688; User Menu ID count = 1571818;
+2018-08-06 15:44:46.950  INFO 6076 --- [           main] c.l.s.tasklet.MyTaskletForRemoteSql      : Time spent = 2792 seconds
+
+#2018/08/06 Batch Execution Result:
+#using:testGetMenuIdByArticleIdViaMenuChannelLinkTbl()
+2018-08-06 17:41:31.693  INFO 5704 --- [           main] c.l.s.tasklet.MyTaskletForRemoteSql      : Total menu id count = 3849;
+2018-08-06 17:41:31.693  INFO 5704 --- [           main] c.l.s.tasklet.MyTaskletForRemoteSql      : System Menu ID count = 3849; User Menu ID count = 216995;
+2018-08-06 17:41:31.693  INFO 5704 --- [           main] c.l.s.tasklet.MyTaskletForRemoteSql      : Time spent = 2865 seconds
+
+#2018/08/07 Batch Execution Result:
+#using:testGetMenuIdByArticleIdViaMenuChannelLinkTbl
+2018-08-07 14:37:38.941  INFO 5280 --- [           main] c.l.s.tasklet.MyTaskletForRemoteSql      : System Menu ID count = 27816;
+2018-08-07 14:37:38.941  INFO 5280 --- [           main] c.l.s.tasklet.MyTaskletForRemoteSql      : Total System Menu ID count = 27816; Total User Menu ID count = 193043;
+2018-08-07 14:37:38.941  INFO 5280 --- [           main] c.l.s.tasklet.MyTaskletForRemoteSql      : Time spent = 2474 seconds
+
+#2018/08/07 Batch Execution Result:
+#using:testGetMenuIdByArticleIdModified()
+2018-08-07 16:53:14.701  INFO 5900 --- [           main] c.l.s.tasklet.MyTaskletForRemoteSql      : Total channel id count = 1581240;
+2018-08-07 16:53:14.701  INFO 5900 --- [           main] c.l.s.tasklet.MyTaskletForRemoteSql      : System Menu ID count = 56074; User Menu ID count = 106412;
+2018-08-07 16:53:14.701  INFO 5900 --- [           main] c.l.s.tasklet.MyTaskletForRemoteSql      : Time spent = 2459 seconds

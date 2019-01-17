@@ -1,5 +1,5 @@
 @font-face {
-	font-family: 'icomoon';
+	font-family: 'icomoon','Microsoft YaHei';
 	src:url('../fonts/icomoon.eot?rretjt');
 	src:url('../fonts/icomoon.eot?#iefixrretjt') format('embedded-opentype'),
 		url('../fonts/icomoon.woff?rretjt') format('woff'),
@@ -10,7 +10,7 @@
 }
 
 [class^="icon-"], [class*=" icon-"] {
-	font-family: 'icomoon';
+	font-family: 'icomoon','Microsoft YaHei';
 	speak: none;
 	font-style: normal;
 	font-weight: normal;

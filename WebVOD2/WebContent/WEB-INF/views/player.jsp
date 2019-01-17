@@ -18,8 +18,8 @@ session.setAttribute("videoPath", videoPath);
     <link href="//cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap-theme.css" rel="stylesheet">
     <script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
     <script src="//cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.js"></script>
-<!--     <script src="//cdn.bootcss.com/vue/1.0.26/vue.js"></script> -->
-    <script src="//cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
+    <script src="//cdn.bootcss.com/vue/1.0.26/vue.js"></script>
+<!--     <script src="//cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script> -->
     <script src="//cdn.bootcss.com/vue/2.4.2/vue.js"></script>
     <script src="${playerPath}/mediaelement-and-player.js"></script>
 <style>
@@ -51,21 +51,21 @@ session.setAttribute("videoPath", videoPath);
 						<source type="application/x-mpegURL" src="${videoPath}">
 	  				</video>
 	  			</div>
+<!-- 	  			<div class="row"> -->
+<!-- 	  					<div id="blog_list"  style="margin-top: 2px;"> -->
+<!--          					<blog-post  v-for="post2 in postList2" v-bind:key="post2.id" v-bind:post="post2"></blog-post> -->
+<!--          				</div> -->
+<!-- 	  			</div> -->
 	  			<div class="row">
-	  					<div id="post_list2"  style="margin-top: 2px;">
-         					<blog-post  v-for="post in postList" v-bind:key="post.id" v-bind:post="post"></blog-post>
+	  					<div id="video_list"  style="margin-top: 2px;">
+         					<video-post  v-for="video in videoList" v-bind:key="video.id" v-bind:post="video"></video-post>
          				</div>
 	  			</div>
-	  			<div class="row">
-	  					<div id="post_list3"  style="margin-top: 2px;">
-         					<blog-post  v-for="post in postList" v-bind:key="post.id" v-bind:post="post"></blog-post>
-         				</div>
-	  			</div>
-	  				  	<div class="row">
-	  					<div id="post_list"  style="margin-top: 2px;">
-         					<blog-post-modified  v-for="post in postList" v-bind:key="post.id" v-bind:post="post"></blog-post-modified>
-         				</div>
-	  			</div>
+<!-- 	  			<div class="row"> -->
+<!-- 	  					<div id="tv_list"  style="margin-top: 2px;"> -->
+<!--          					<tv-post  v-for="post1 in postList1" v-bind:key="post1.id" v-bind:post="post1"></tv-post> -->
+<!--          				</div> -->
+<!-- 	  			</div> -->
 			</div>
 
 			<!-- 右側パネル:メディアリンク -->
