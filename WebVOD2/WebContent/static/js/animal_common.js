@@ -4,16 +4,13 @@ var player = new MediaElementPlayer('#my-player', {
 	clickToPlayPause: true,
 	alwaysShowControls: true,
 	alwaysShowHours: true,
-//	success: function (media, ele, player) {
-//		player.play();
-//	}
     success: function(mediaElement, originalNode) {
     	player = mediaElement;
     }
 });
 
 function play(link) {
-	alert(link);
+//	alert(link);
 	player.pause();
 	player.setSrc(link);
 	player.load();

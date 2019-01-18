@@ -14,19 +14,17 @@ session.setAttribute("imagePath", imagePath);
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<!-- 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"> -->
-<!-- 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> -->
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Animal Card UI Sample Page</title>
 	<link rel="stylesheet" href="${basePath}static/css/reset.css" />
 	<link rel="stylesheet" href="${basePath}static/css/default.css" />
 	<link rel="stylesheet" href="${basePath}static/css/styles.css" />
     <link rel="stylesheet" href="${playerPath}/mediaelementplayer.css" />
-    <script src="//cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
+	<!-- IE 11 does not support -->
+<!--     <script src="//cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script> -->
     <script src="${basePath}static/js/jquery-1.11.0.min.js"></script>
 	<!-- import vue 2.5.16 -->
     <script src="${basePath}static/js/vue.js"></script>
-<!--     <script src="//cdn.bootcss.com/vue/1.0.26/vue.js"></script> -->
     <script src="${playerPath}/mediaelement-and-player.js"></script>
 <style>
 .mejs-controls {
@@ -38,14 +36,12 @@ session.setAttribute("imagePath", imagePath);
 <article class="htmleaf-container">
 		<header class="htmleaf-header">
 			<h1>Material Design Animal Card</h1>
-<!-- 			<p><div  id = "showTime" align="center" ></div></p> -->
 		</header>
-
 		<!--${audioPath}-->
 	  	<div style="display:none">
-<%-- 	  		<audio id="my-player" src="${audioPath}" autostart="false" loop="false" type="audio/mp3" controls preload hidden=true> --%>
 	  		<audio id="my-player" preload="auto" hidden=true>
 	  			<source src="${audioPath}/animal/baboon_monkey.mp3" type="audio/mpeg"/>
+	  			<!--IE 11 does not support wav or ogg file!-->
 				<source src="${audioPath}/animal_nm_en/baboon_monkey_en.wav" type="audio/wav"/>
 <!-- 				<source src="" type="audio/ogg"/> -->
 	  		</audio>
@@ -68,10 +64,5 @@ session.setAttribute("imagePath", imagePath);
 </article>
 	<script src="<%=basePath%>static/js/animal_common.js" type="text/javascript" charset=”utf-8″></script>
 	<script src="<%=basePath%>static/js/animal_card_ui.js" type="text/javascript" charset=”utf-8″></script>
-	<script type="text/javascript">
-	$(document).ready(function () {
-		onLoad();
-	});
-	</script>
 </body>
 </html>

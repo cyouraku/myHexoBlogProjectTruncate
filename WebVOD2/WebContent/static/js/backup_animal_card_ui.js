@@ -23,6 +23,11 @@ function onLoad(){
 	    initial();
         function initial(){
         	console.log('product item amount = ' + productItem.length)
+        	if(productItem.length == 1){
+            	//alert()是一种破坏性的方法，执行的时候弹出弹窗之后的代码就不会执行。
+//        		alert(productItem.length);
+        		console.log('product item amount = ' + productItem.length)
+        	}
         	productItem.first().addClass('active');
             getProductHeight = 341;
             $('.products').css({ height: getProductHeight });
@@ -87,22 +92,43 @@ var vm = new Vue({
 	    el: '#animal_card',
 	    data: {
 	    	animalList:[]
+//	    	animalList:[
+//	    	            {id: '', name : '', effect : '', speak : '', jpg : '', description : '' }
+//	    	]
+//	    	animalList:[
+//	    		{id: '1', name : 'baboon monkey', effect : 'audio/animal/baboon_monkey.mp3', speak : 'audio/animal_nm_en/baboon_monkey_en.wav', jpg : 'images/animal_pic/baboon_monkey.jpg', description : 'This is a baboon monkey.' },
+//	    	]
+//			animalList:[
+//    		{id: '1', name : 'baboon monkey', effect : 'audio/animal/baboon_monkey.mp3', speak : 'audio/animal_nm_en/baboon_monkey_en.wav', jpg : 'images/animal_pic/baboon_monkey.jpg', description : 'This is a baboon monkey.' },
+//    		{id: '2', name : '狒狒猴', effect : 'audio/animal/baboon_monkey.mp3',speak : 'audio/animal_nm_cn/baboon_monkey_cn.wav', jpg : 'images/animal_pic/baboon_monkey.jpg', description : '这是一只狒狒猴。' },
+//    		{id: '3', name : 'ヒヒ猿', effect : 'audio/animal/baboon_monkey.mp3',speak : 'audio/animal_nm_ja/baboon_monkey_ja.wav', jpg : 'images/animal_pic/baboon_monkey.jpg', description : 'これはヒヒ猿です。' }
+//    		]
 	    },
+//	    ready:function(){
+//	    	this.getAjaxAnimals();
+//	    },
 	    mounted:  function(){
-//	    	this.getAnimals();
 			this.getAjaxAnimals();
 		},
+//	    beforeMount: function() {
+//	    	this.getAjaxAnimals();
+//	    },
+//		computed: {
+//		    getAnimals: function () {
+//		       return this.animalList;
+//		    }
+//		 },
 	    methods: {
-	    	//IE 11 does not support Promise response!Chrome OK!
-//	    	getAnimals:function(){
-//	    		var self = this;
-//	    		var config = { headers: {'Access-Control-Allow-Origin': '*', 'content-type': 'application/x-www-form-urlencoded'} };
-//	    		axios.get('http://localhost:8080/WebServiceCXF-postgreSql/services/rest/animalService/getAllAnimals', config)
-//	    		.then(function (response) {
-//	    		    // handle success
-//	    			  self.animalList = response.data;
-//		    		  console.log(response.data);
-//	    		})
+	    	//IE does not support Promise response!Chrome failed to re-rendring view!
+	    	getAnimals:function(){
+	    		var self = this;
+	    		var config = { headers: {'Access-Control-Allow-Origin': '*', 'content-type': 'application/x-www-form-urlencoded'} };
+	    		axios.get('http://localhost:8080/WebServiceCXF-postgreSql/services/rest/animalService/getAllAnimals', config)
+	    		.then(function (response) {
+	    		    // handle success
+	    			  self.animalList = response.data;
+		    		  console.log(response.data);
+	    		})
 //	    		.catch(function (error) {
 //	    		    // handle error
 //	    		    console.log('web service failure! Error : ' + error);
@@ -110,7 +136,7 @@ var vm = new Vue({
 //	    		    // always executed
 //	    			console.log('axios finished!');
 //	    		});
-//	    	},
+	    	},
 	    	//Tested:Chrome OK,IE re-rendering failed!
 	    	getAjaxAnimals:function(){
 	      		var self = this;
