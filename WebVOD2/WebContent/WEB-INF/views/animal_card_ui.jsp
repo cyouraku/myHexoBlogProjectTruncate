@@ -42,7 +42,7 @@ session.setAttribute("imagePath", imagePath);
 	  		<audio id="my-player" preload="auto" hidden=true>
 	  			<source src="${audioPath}/animal/baboon_monkey.mp3" type="audio/mpeg"/>
 	  			<!--IE 11 does not support wav or ogg file!-->
-				<source src="${audioPath}/animal_nm_en/baboon_monkey_en.wav" type="audio/wav"/>
+<%-- 				<source src="${audioPath}/animal_nm_en/baboon_monkey_en.wav" type="audio/wav"/> --%>
 <!-- 				<source src="" type="audio/ogg"/> -->
 	  		</audio>
 	  	</div>
