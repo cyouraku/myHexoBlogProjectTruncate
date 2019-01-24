@@ -48,7 +48,8 @@ public interface AnimalService {
 	@GET
     @CrossOriginResourceSharing(
             allowAllOrigins = true,
-            allowOrigins = { "*" },
+//            allowOrigins = { "*" },
+            maxAge = 1,
             allowCredentials = true
     )
 	@Path("/getAllAnimals")

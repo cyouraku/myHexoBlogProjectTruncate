@@ -19,4 +19,9 @@ public class AudioController {
         return "animal_card_ui";
     }
 
+    @RequestMapping(value = "/multi_card_ui",method = RequestMethod.GET)
+    public String getMultiCardUI(){
+        return "multi_card_ui";
+    }
+
 }

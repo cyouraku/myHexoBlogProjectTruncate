@@ -117,11 +117,16 @@
 		</jaxrs:serviceBeans>
 		<jaxrs:providers>
 			<bean class="org.codehaus.jackson.jaxrs.JacksonJsonProvider" />
+			<!-- add cors-filter ref-->
+			<ref bean="cors-filter" />
 		</jaxrs:providers>
 		<jaxrs:extensionMappings>
 			<entry key="json" value="application/json" />
 			<entry key="xml" value="application/xml" />
 		</jaxrs:extensionMappings>
 	</jaxrs:server>
+
+	<!-- add cors-filter bean -->
+    <bean id="cors-filter" class="org.apache.cxf.rs.security.cors.CrossOriginResourceSharingFilter"/>
 
 </beans>
