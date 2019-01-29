@@ -318,7 +318,8 @@ public class SeleniumServerUtil {
 		Writer fileWriter = null;
 		BufferedWriter bufferedWriter = null;
 		try {
-			fileWriter = new FileWriter(file,true);
+			//set false to disable append mode
+			fileWriter = new FileWriter(file,false);
 			bufferedWriter = new BufferedWriter(fileWriter);
 			// Write the lines one by one
 			for (String line : content) {

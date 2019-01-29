@@ -24,56 +24,88 @@ public class FindUser {
 	 * total log tsv file
 	 * "'2018/11/02 19:02:15.111'	'88412'	'Mozilla/5.0 (iPhone; CPU iPhone OS 11_0_1 like Mac OS X) AppleWebKit/604.2.10 (KHTML,like Gecko) Mobile/15A8391'"
 	 */
-	private static final String file = "C:\\data\\total_records.tsv";
+	private static final String file = "C:\\data\\201901\\total_records.tsv";
 	/**
 	 * totoal user list
 	 * "userId = 81214"
 	 */
-	private static final String userFile = "C:\\data\\TotalUserList.txt";
+	private static final String userFile = "C:\\data\\201901\\TotalUserList.txt";
 	/**
 	 * total user agents per user file
 	 * "37468	D2P iOS/iPad/12.0.1"
 	 */
-	private static final String userAgentsFile = "C:\\data\\TotalAgentsPerUser.txt";
+	private static final String userAgentsFile = "C:\\data\\201901\\TotalAgentsPerUser.txt";
 	/**
-	 * output file in any pattern
+	 * output file in pattern 1
 	 */
-	private static final String outputFile = "C:\\data\\findUserAgentsDesc.txt";
+	private static final String outputFile = "C:\\data\\201901\\findUserAgentsDesc.txt";
+	/**
+	 * output file in pattern 2
+	 */
+	private static final String outputFile2 = "C:\\data\\201901\\findLoginTimesDaily.txt";
+	/**
+	 * output file in pattern 3
+	 */
+	private static final String outputFile3 = "C:\\data\\201901\\findLoginTimesDailyAsc.txt";
+	/**
+	 * output file in pattern 4
+	 */
+	private static final String outputFile4 = "C:\\data\\201901\\findLoginTimesDailyDesc.txt";
+	/**
+	 * output file in pattern 8
+	 */
+	private static final String outputFile8 = "C:\\data\\201901\\insertUserLogHistory.txt";
+	/**
+	 * output file in pattern 9
+	 */
+	private static final String outputFile9 = "C:\\data\\201901\\findDistinctUser.txt";
+	/**
+	 * prefix for file name
+	 */
+	private static final String PRE = "C:\\data\\201901\\";
 	/**
 	 * users in file1
 	 * "userId = 81214"
 	 */
-	private static final String file1 = "C:\\data\\20181101.txt";
+	private static final String file1 = "C:\\data\\201901\\20190113.txt";
 	/**
 	 * users in file2
 	 * "userId = 81214"
 	 */
-	private static final String file2 = "C:\\data\\20181110.txt";
+	private static final String file2 = "C:\\data\\201901\\20190114.txt";
+	/**
+	 * user array
+	 */
+	private static final String[] USER_ID_ARR = {"96573","81949","96430","86180","74846","93028","88651"};
+	/**
+	 * user files array
+	 */
+	private static final String[] FILE_USERS_ARR = {"20190113.txt","20190114.txt","20190115.txt","20190116.txt","20190117.txt","20190118.txt"};
 
 	public static void main(String[] args) throws ParseException {
 
 		//https://news2.medy-id.jp/clinical_qa/156615
-		int cmd = 1;
+		int cmd = 8;
 		switch(cmd){
 		case 0:
 			//Find user agents by uid
-			findUserAgentsByUserId(userAgentsFile,userFile,"31842");
+			findUserAgentsByUserId(userAgentsFile,userFile,USER_ID_ARR);
 			break;
 		case 1:
 			//count user agents,save user agent file and print the list.
 			findUserAgentsList(file,userFile,outputFile);
 			break;
 		case 2:
-			//basic find
-			findLoginTimesDaily(file,userFile,outputFile);
+			//Find distinct user
+			createDistinctUserList(file1);
 			break;
 		case 3:
 			//save to Asc
-			saveAsc(findLoginTimesDaily(file,userFile,outputFile));
+			saveAsc(findLoginTimesDaily(file,userFile),outputFile3);
 			break;
 		case 4:
 			//save to desc
-			saveDesc(findUserAgentsList(file,userFile,outputFile));
+			saveDesc(findLoginTimesDaily(file,userFile),outputFile4);
 			break;
 		case 5:
 			//find duplicated user list both in file1 and file2
@@ -83,6 +115,21 @@ public class FindUser {
 			//find user agent of safari
 			findUserAgentSafari("Mozilla/5.0 (iPhone; CPU iPhone OS 12_0_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/16A404");
 			break;
+		case 7:
+			//Create TotalAgentsPerUser.txt file
+			createTotalUserAgentsPerUser(file,userAgentsFile);
+			break;
+		case 8:
+			//Create sql sentences to insert into user_log_history table.
+			createInsertSqlLogDto(file,outputFile8);
+		case 9:
+			//find duplicated user list both in file1 and file2
+			saveFile(createDistinctUserList(userFile),outputFile9);
+			break;
+		case 10:
+			//create distinct user daily
+			createDistinctUserListDaily(FILE_USERS_ARR);
+			break;
 		default:
 			logger.info("No command detected!");
 			break;
@@ -90,11 +137,56 @@ public class FindUser {
 
 	}
 
-	public static void saveAsc(LinkedList<UserDto> list) throws ParseException {
+	/**
+	 * create distinct user daily
+	 * @param userFiles
+	 */
+	public static void createDistinctUserListDaily(String[] userFiles){
+		for(String file : userFiles){
+			createDistinctUserList(PRE + file);
+		}
+	}
+
+	/**
+	 * Create TotalAgentsPerUser.txt file
+	 * @param logFile
+	 * @param outputFile
+	 */
+	public static void createTotalUserAgentsPerUser(String logFile,String outputFile){
+		//Get LogDto List
+		List<LogDto> logDtoList = readFileToLogDtoList(logFile);
+		//Output list
+		List<String> output = new ArrayList<String>();
+		for(LogDto dto : logDtoList){
+			output.add(String.format("%s	%s",dto.getUserId().replaceAll("'", ""),dto.getUserAgent().replaceAll("'", "")));
+		}
+		//Write to file
+		SeleniumServerUtil.writerFile(output, outputFile);
+	}
+
+	/**
+	 * Save List<String> to file
+	 * @param list
+	 * @param outputFile
+	 * @throws ParseException
+	 */
+	public static void saveFile(List<String>list, String outputFile) throws ParseException {
+		logger.info(String.format("list.size() = %d",list.size()));
+		//Save to file
+		SeleniumServerUtil.writerFile(list, outputFile);
+	}
+
+	/**
+	 * Save LinkedList<UserDto> to file order by logint times asc
+	 * @param list
+	 * @param outputFile
+	 * @throws ParseException
+	 */
+	public static void saveAsc(LinkedList<UserDto> list, String outputFile) throws ParseException {
 		List<String> output = new ArrayList<String>();
 		//Sort asc
 		list.sort(UserDto::compareTo);
-		System.out.println("Asc by login times");
+		logger.info("Asc by login times");
 		for(UserDto sorted : list){
 			System.out.println(String.format("user=%s,login=%d",sorted.getUserId(),sorted.getLoginTimes()));
 			output.add(String.format("user=%s,login=%d",sorted.getUserId(),sorted.getLoginTimes()));
@@ -103,7 +195,13 @@ public class FindUser {
 		SeleniumServerUtil.writerFile(output, outputFile);
 	}
 
-	public static void saveDesc(LinkedList<UserDto> list) throws ParseException{
+	/**
+	 * Save LinkedList<UserDto> to file order by logint times desc
+	 * @param list
+	 * @param outputFile
+	 * @throws ParseException
+	 */
+	public static void saveDesc(LinkedList<UserDto> list,String outputFile) throws ParseException{
 		List<String> output = new ArrayList<String>();
 		//Sort desc
     	Collections.sort(list, new Comparator<UserDto>() {
@@ -130,7 +228,7 @@ public class FindUser {
 	 * @return
 	 * @throws ParseException
 	 */
-	public static LinkedList<UserDto> findLoginTimesDaily(String logFile,String userFile,String outputFile) throws ParseException{
+	public static LinkedList<UserDto> findLoginTimesDaily(String logFile,String userFile) throws ParseException{
 		//Get LogDto List
 		List<LogDto> logDtoList = readFileToLogDtoList(logFile);
 		//distinct user
@@ -171,9 +269,6 @@ public class FindUser {
 			timeList.clear();
 		}
 		logger.info("cntSize = "+ cntSize);
-
-		//Write to file
-//		SeleniumServerUtil.writerFile(output, outputFile);
 
 		return resultList;
 	}
@@ -257,15 +352,17 @@ public class FindUser {
 	 * @param userFile
 	 * @param userId
 	 */
-	public static void findUserAgentsByUserId(String userAgentsFile,String userFile,String userId){
+	public static void findUserAgentsByUserId(String userAgentsFile,String userFile,String[] userIds){
 		List<UserDto> list = readFileToUserDtoWithUserAgentsInfo(userAgentsFile,userFile);
 		for(UserDto ud : list){
-			if(userId.equals(ud.getUserId())){
-				System.out.println(String.format("user=%s,ua size=%d", userId,ud.getUserAgents().size()));
-				for(String ua : ud.getUserAgents()){
-					System.out.println(String.format("user=%s,ua=%s", userId,ua));
+			for(String userId : userIds){
+				if(userId.equals(ud.getUserId())){
+					System.out.println(String.format("user=%s,ua size=%d", userId,ud.getUserAgents().size()));
+					for(String ua : ud.getUserAgents()){
+						System.out.println(String.format("user=%s,ua=%s", userId,ua));
+					}
+					break;
 				}
-				break;
 			}
 		}
 	}
@@ -351,7 +448,7 @@ public class FindUser {
 	 * Create sql sentences to insert into user_log_history table.
 	 * @param file
 	 */
-	public static void createInsertSqlLogDto(String file){
+	public static void createInsertSqlLogDto(String file,String outputFile){
 		List<LogDto>  cdList = readFileToLogDtoList(file);
 		int cnt = 0;
 //		StringBuilder sb = new StringBuilder();
@@ -368,7 +465,7 @@ public class FindUser {
 		}
 //		System.out.println(sb.toString());
 		//Write to file
-		SeleniumServerUtil.writerFile(listStr, "C:\\data\\insertUserLogHistory.txt");
+		SeleniumServerUtil.writerFile(listStr, outputFile);
 	}
 
 
@@ -382,6 +479,7 @@ public class FindUser {
 		List<UserDto>  cdList = readFileToUserDtoList(file);
 		for(UserDto cd : cdList){
 			String id = cd.getUserId();
+//			logger.info(String.format("user id = %s",id));
 			userMap.putIfAbsent(id, "");
 		}
 		Object[] id01 = userMap.keySet().toArray();
@@ -391,7 +489,7 @@ public class FindUser {
 			distinctUsers.add(str.toString());
 //			System.out.println(str.toString());
 		}
-//		logger.info(String.format("Total users on %s = %d", file1.substring(8, 16), userMap.size()));
+		logger.info(String.format("\n File Name = %s; warn log cnt = %d; distinct user cnt = %d",file, cdList.size(), distinctUsers.size()));
 		return distinctUsers;
 	}
 
